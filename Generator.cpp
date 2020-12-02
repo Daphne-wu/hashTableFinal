@@ -1,10 +1,8 @@
 #include "Generator.h"
 #include <iostream>
 #include <fstream>
-#include <sstream>
-#include<string>
+#include <cstring>
 #include <vector>
-
 
 Generator::Generator() {
 	ReadFirstName();
@@ -12,17 +10,27 @@ Generator::Generator() {
 }
 //reads the first name file txt
 void Generator::ReadFirstName() {
-  	string line;
-	int numOfLines = 30;
-
-	ifstream File("firstNames.txt");
-	while(getline(File, line))
-	{
-	  ++numOfLines;
-	  firstNames.push_back(line);
+  FILE* pfile = NULL;
+	char line[20];
+	//read the file
+	pfile = fopen("FirstNames.txt", "r");
+//read through each line til; 20 characters
+	while (fgets(line, 20, pfile)) {
+		char* position = 0;
+		//if its a new line, then position (last character) is null signalling end of cstring
+		if ((position = strchr(line, '\n')) != NULL)
+		{
+			*position = '\0';
+		}
+		//allocate a new char for first name
+		char* firstname = new char[strlen(line) + 1];
+				//set memory
+		memset(firstname, '\0', strlen(firstname));
+		//copy line to naem
+		strcpy(firstname, line);
+		firstNames.push_back(firstname);
 	}
 
-	File.close();
 }
 
 //returns random student
@@ -52,24 +60,32 @@ bool Generator::checkID(int id, vector<int> vect) {
 }
 //reads the first name file txt
 void Generator::ReadLastName() {
-  string line;
-	int numOfLines = 30;
-
-	//get first name at random number
-	ifstream File("lastNames.txt");
-	while(getline(File, line))
-	{
-	  ++numOfLines;
-	  lastNames.push_back(line);
+  FILE* pfile = NULL;
+	char line[20];
+	pfile = fopen("LastNames.txt", "r");
+//read through each line til; 20 characters
+	while (fgets(line, 20, pfile)) {
+		char* position = 0;
+				//if its a new line, then position (last character) is null signalling end of cstring
+		if ((position = strchr(line, '\n')) != NULL)
+		{
+			*position = '\0';
+		}
+		char* lastName = new char[strlen(line) + 1];
+		//set memory
+		memset(lastName, '\0', strlen(lastName));
+		//copy line to last name
+		strcpy(lastName, line);
+		lastNames.push_back(lastName);
 	}
-	File.close();
+
 }
 
-int Generator::hashFunc(string name, int hashsize) {
+int Generator::hashFunc(char* name, int hashsize) {
 	int key = 0;
-	int size = name.size();
+	int size = strlen(name);
 	for (int i = 0; i < size; i = i + 4) {
-		key = key + (int)(name.size() + i);
+		key = key + (int)(*name + i);
 	}
 
 	key = key % hashsize;

@@ -1,4 +1,3 @@
-//HashTable Student List program with help from Pranav with generator portion of project
 #pragma warning(disable : 4996)
 #include <vector>
 #include <sstream>
@@ -14,8 +13,8 @@ using namespace std;
 
 //function prototypes
 void addStudent(Student* newstudent, int hashSize, Student** hashTable, Generator* generator);
-void printStudent(Student** hashTable);
-void deleteStudent(int id, Student** hashTable);
+void printStudent(Student** hashTable, int hashSize);
+void deleteStudent(int id, Student** hashTable, int hashSize);
 bool getInfo(Student* &newstudent, vector<int> ids);
 void rehash(Student** &hashTable, int &hashSize, Generator* generator);
 
@@ -26,14 +25,14 @@ int main() {
 	int hashSize = 100;
 	vector<int> ids;// stores the ids to make sure there are no repeats
 	Student** hashTable = new Student* [hashSize];
-	string input;
+	char* input = new char[20];
 	int key;
 	int value;
 	bool validinput = false;
 	bool running = true;
 	bool keepadding = true;
-	string answer;
-	string type;
+	char* answer = new char[20];
+	char* type = new char[20];
 	int amount;
 
 	// initilizes array to make sure they are all NULL
@@ -52,20 +51,20 @@ int main() {
 		cin >> input;
 		validinput = false;
 
-		//ensure that there is the correct input otherwise re ask
-		while (input != "ADD" && input != "PRINT" && input != "QUIT" && input != "DELETE" ) {
-			cout << "Invalid input of " << input << ", please try again." << endl;
-			cin >> input;
-		}
+		// //ensure that there is the correct input otherwise re ask
+		// while (input != "ADD" && input != "PRINT" && input != "QUIT" && input != "DELETE" ) {
+		// 	cout << "Invalid input of " << input << ", please try again." << endl;
+		// 	cin >> input;
+		// }
 
 //determine what to do depending on the input
-		if (input == "ADD") {
+		if (strcmp(input, "ADD") == 0) {
 			keepadding = true;
 			//if the user wants to keep adding, ask again and do again while makig sure the input is valid
 			while (keepadding == true) {
 				cout << "Would you like to add randomly or manually?(Type 'random' or 'manual')" << endl;
 				cin >> type;
-				if (type == "random") {
+				if (strcmp(type, "random") == 0) {
 					//determine how many students to generate and add
 					cout << "How many students would you like to generate?" << endl;
 					cin >> amount;
@@ -76,7 +75,7 @@ int main() {
 					}
 					
 				}
-				else if (type == "manual") {
+				else if (strcmp(type, "manual") == 0) {
 					Student* student = new Student();
 					bool invalidid = getInfo(student, ids);
 					// if they enter a new ID, student gets added. If not, program alerts user and the student is deleted
@@ -91,26 +90,26 @@ int main() {
 				cout << "Would you like to add another student? Yes or no." << endl;
 				cin >> answer;
 		  		
-					if (answer == "yes" || answer == "Yes" || answer == "YES" || answer == "y" || answer == "Y"){
+					if (strcmp(answer, "yes") == 0){
 						keepadding = true;
 					}
-					else if (answer == "no" || answer == "No" || answer == "NO" || answer == "n" || answer == "N") {
+					else if (strcmp(answer, "no") == 0) {
 						keepadding = false;
 					}
 			
 			}
 		}
-		else if (input == "PRINT") {
-			printStudent(hashTable);
+		else if (strcmp(input, "PRINT") == 0) {
+			printStudent(hashTable, hashSize);
 		}
-		else if (input == "DELETE") {
+		else if (strcmp(input, "DELETE") == 0) {
 			int id;
 			// asks for ID then deletes
 			cout << "Which ID would you like to delete?\n";
 			cin >> id;
-			deleteStudent(id, hashTable);
+			deleteStudent(id, hashTable, hashSize);
 		}
-		else if (input == "QUIT") {
+		else if (strcmp(input, "QUIT") == 0) {
 			cout << "Thanks!" << endl;
 			running = false;
 		}
@@ -176,7 +175,7 @@ void addStudent(Student* newstudent, int hashSize, Student** hashTable, Generato
 }
 
 //function to print student 
-void printStudent(Student** hashTable) {
+void printStudent(Student** hashTable, int hashSize) {
 	// loops through hastable
 	for (int i = 0; i < hashSize; i++) {
 		Student* ptr = hashTable[i];
@@ -192,7 +191,7 @@ void printStudent(Student** hashTable) {
 
 //function to delete student 
 //loops through hashTabletable and corresponding linked lists to find correct id to delete
-void deleteStudent(int id, Student** hashTable) {
+void deleteStudent(int id, Student** hashTable, int hashSize) {
 	Student* current = NULL;
 	Student* previous = NULL;
 	// loops through hashTabletable

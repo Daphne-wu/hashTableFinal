@@ -6,14 +6,14 @@ using namespace std;
 
 //create student struct
 struct Student {
-	string first;
-	string last;
+	char* first = new char();
+	char* last = new char();
 	int id;
 	float gpa;
 	Student* next;
 	// functions of student
-	void setFirst(string first);
-	void setLast(string last);
+	void setFirst(char* first);
+	void setLast(char* last);
 };
 
 

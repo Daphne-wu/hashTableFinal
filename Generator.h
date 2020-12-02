@@ -11,8 +11,8 @@ public:
 	// holder for id number
 	int idHolder;
 	// vector that holds the first and last names of students from file
-	vector<string> firstNames;
-	vector<string> lastNames;
+	vector<char*> firstNames;
+	vector<char*> lastNames;
 	// generates the first and last name vectors
 	void ReadFirstName();
 	void ReadLastName();
@@ -21,5 +21,5 @@ public:
 	// checks the id to makesure it doesnt repeat
 	bool checkID(int id, vector<int> vect);
 	//hashes the first name of studnet
-	int hashFunc(string name, int hashsize);
+	int hashFunc(char* name, int hashsize);
 };
